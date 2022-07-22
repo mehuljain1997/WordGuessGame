@@ -1,0 +1,69 @@
+<h1 style="text-align: center;">Welcome {{name}} on word guess game</h1>
+<br>
+<div id="logout" style="text-align:right; padding-right: 10px;">
+    <div>
+        <button (click)="logout()">Logout</button>
+    </div>
+    <br>
+</div>
+
+<div id="chooseDifficulty" style="display: block; text-align: center;">
+    <h3>Please choose a difficulty</h3>
+    <br>
+    <button style='margin-right:16px' title="very easy" (click)="chooseDif1()">Easy</button>
+    <button style='margin-right:16px' title="not difficult" (click)="chooseDif2()">Normal</button>
+    <button title="a challenge" (click)="chooseDif3()">Advance</button>
+</div>
+
+
+<div id="startButton" style="display: none; text-align: center;">
+    <h4 id="highestScore"></h4>
+    <h1>Guess a Word</h1>
+    <button (click)="start()">Lets Start</button>
+    <p>Note: Some words may contain a hyphen(-) ex: X-ray</p>
+
+</div>
+
+<div id="mainGame" style="display: none; text-align: center;">
+
+    <p id="question"></p>
+
+    <input type="text" id="guess" maxlength="1">
+    <br>
+    <div>
+        <button (click)="enterGuess()">Enter Guess</button>
+    </div>
+
+</div>
+
+<div id="RRguess" style="display: block; text-align: center;">
+    <br>
+    <p style="color: green;" id="rightGuess"></p>
+    <p style="color: red;" id ="wrongGuess"></p>
+    <p id ="guessesLeft"></p>
+</div>
+
+<div id="youLose" style="display: none; text-align: center;">
+    <h4 id="score"></h4>
+    <br>
+    <h1>You Lose</h1>
+
+    <div>
+        <button (click)="restart()">Play again?</button>
+    </div>
+    <br>
+
+    <h3 id="correctWordWas"></h3>
+
+</div>
+
+<div id="youWin" style="display: none; text-align: center;">
+
+    <h2>You Win</h2>
+
+    <div>
+        <button (click)="continue()">Continue?</button>
+    </div>
+
+</div>
+
