@@ -173,7 +173,6 @@ export class WordGuessComponent implements OnInit {
       ];
     }
     if (this.choice === 3) {
-      //randomWords = ["humor", "miniature", "amusing", "creepy", "fact", "risk", "verse", "land", "lumpy", "holiday", "glorious", "weigh", "brake", "pretty", "grin", "capricious", "bite-sized", "misty", "ignore", "certain", "sloppy", "dress", "true", "zonked", "observation", "action", "various", "want", "direful", "suck", "dress", "scarecrow", "judge", "madly", "quizzical", "consist", "fierce", "love", "arrest", "serve", "fit", "hug", "tan", "curve", "eatable", "tub", "race", "innocent", "open", "preach", "steady", "acoustics", "lock", "field", "arrange", "rifle", "learned", "toe", "flow", "competition", "ill-fated", "oatmeal", "match", "male", "measure", "loaf", "smile", "wrestle", "dull", "food", "locket", "bell", "beg", "strengthen", "responsible", "enchanting", "loutish", "switch", "idea", "nine", "squeamish", "pig", "bat", "dear", "trains", "owe", "frogs", "assorted", "lonely", "hurry", "natural", "sun", "snow", "obnoxious", "broken", "friend", "bright", "cake", "sour", "permit", "economic", "lovely", "quick", "van", "tempt", "apparel", "decay", "business", "adjustment", "blushing", "makeshift", "slippery", "load", "winter", "exist", "tongue", "country", "roll", "fast", "moor", "possess", "pat", "pass", "books", "impartial", "hospitable", "dust", "naughty", "extra-large", "tacky", "produce", "committee", "fuzzy", "judicious", "nebulous", "stick", "ear", "copy", "friendly", "press", "distinct", "vegetable", "upset", "venomous", "statement", "sulky", "spell", "x-ray", "square", "taste", "great", "thumb", "adjoining", "chilly", "test", "ancient", "green", "badge", "work", "repeat", "free", "elderly", "doctor", "difficult", "grubby", "approval", "turn", "vivacious", "thundering", "cherries", "rest", "plan", "crime", "sticks", "wealthy", "phone", "suspend", "gullible", "fence", "note", "wall", "interest", "coil", "jump", "enchanted", "funny", "racial", "greasy", "polish", "elbow", "smart", "bore", "crowd", "glistening", "oval", "eggs", "nauseating", "detailed", "veil", "coal"]
       randomWords = [
         'miniature',
         'amusing',
@@ -266,14 +265,14 @@ export class WordGuessComponent implements OnInit {
         'detailed',
       ];
     }
-    var raNum = Math.floor(Math.random() * 50);
+    let raNum = Math.floor(Math.random() * 50);
     return randomWords[raNum];
   }
 
   winCountFunc() {
-    var num = 0;
-    var lettUsed = '';
-    var count = this.word.length;
+    let num = 0;
+    let lettUsed = '';
+    let count = this.word.length;
 
     while (count > 0) {
       if (lettUsed.includes(this.word[count - 1])) {
@@ -285,16 +284,30 @@ export class WordGuessComponent implements OnInit {
       count -= 1;
     }
 
-    return num;
+    if((this.word.split(this.word[2]).length - 1)> 1){
+      num++
+    }
+    if((this.word.split(this.word[0]).length - 1) > 1){
+      num++
+    }
+    return num-2;
   }
 
   wordStart() {
-    var wordLength = this.word.length;
-    var wordL_ = '';
-    var count = wordLength;
+    let wordLength = this.word.length;
+    let wordL_ = '';
+    let count = wordLength;
 
     while (count > 0) {
-      this.wordGuess.push(' _ ');
+      if(count === wordLength){
+        this.wordGuess.push(this.word[0]);
+      }
+      else if(count === wordLength-2) {
+        this.wordGuess.push(this.word[2]);
+      }
+      else {
+        this.wordGuess.push(' _ ');
+      }
       count -= 1;
     }
   }
@@ -302,6 +315,7 @@ export class WordGuessComponent implements OnInit {
   start() {
     this.word = this.wordw();
     this.winCount = this.winCountFunc();
+    console.log('this.winCount',this.winCount)
 
     if (this.choice == 1) {
       this.guessBomb = this.word.length + 1;
@@ -321,26 +335,31 @@ export class WordGuessComponent implements OnInit {
     document.getElementById('question').innerHTML = 'Enter your first guess';
     this.wordStart();
     document.getElementById('RRguess').style.display = 'block';
+    console.log('this.wordGuess start',this.wordGuess)
     document.getElementById('rightGuess').innerHTML =
       'word progress: ' + this.wordGuess;
     document.getElementById('wrongGuess').innerHTML =
       'Wrong guesses: ' + this.wrongGuess;
     document.getElementById('guessesLeft').innerHTML =
       'Guesses remaining: ' + this.guessBomb;
-
-    //var x = document.getElementById("guess").maxLength;
-    //document.getElementById("demo").innerHTML = x;
   }
 
   enterGuess() {
-    var lett = (document.getElementById('guess') as HTMLInputElement).value;
+    let lett = (document.getElementById('guess') as HTMLInputElement).value;
     (document.getElementById('guess') as HTMLInputElement).value = '';
     if(!this.enteredKeys.includes(lett)){
       this.enteredKeys.push(lett);
       if (lett.length === 1) {
-        var rightOnot = this.isRightOnot(lett);
+        let rightOnot = this.isRightOnot(lett);
+        console.log('rightOnot',rightOnot)
         if (rightOnot == true) {
           this.NewCW(lett);
+          // if(lett != this.wordGuess[2] || (this.word.split(this.word[2]).length - 1)> 1){
+          //   this.NewCW(lett);
+          // }
+          // if(lett != this.wordGuess[0] || (this.word.split(this.word[0]).length - 1) > 1){
+          //   this.NewCW(lett);
+          // }
         } else {
           if (!this.wrongGuess.includes(lett)) {
             this.wrongGuess.push(lett);
@@ -351,6 +370,8 @@ export class WordGuessComponent implements OnInit {
       } else {
         this.guessBomb -= 1;
       }
+      console.log('this.wordguess enter',this.wordGuess)
+      console.log('this.wincount enter',this.winCount)
       if (this.guessBomb <= 0) {
         this.gameLose();
       }
@@ -367,12 +388,26 @@ export class WordGuessComponent implements OnInit {
   }
 
   isRightOnot(a) {
-    var n = this.word.includes(a);
+    console.log('first count',(this.word.split(this.word[0]).length - 1))
+    console.log('third count',(this.word.split(this.word[2]).length - 1))
+    if(this.wordGuess[0] == a && (this.word.split(this.word[0]).length - 1) > 1){
+      return true
+    }
+    else if(this.wordGuess[2] == a && (this.word.split(this.word[2]).length - 1)> 1){
+      return true
+    }
+    else if(this.wordGuess[0] == a){
+      return false
+    }
+    else if(this.wordGuess[2] == a){
+      return false
+    }
+    const n = this.word.includes(a);
     return n;
   }
 
   NewCW(letter) {
-    var count = 0;
+    let count = 0;
     this.winCount -= 1;
 
     while (count <= this.word.length - 1) {
@@ -453,6 +488,13 @@ export class WordGuessComponent implements OnInit {
   }
 
   logout(){
+    if(this.totalScore && this.choice){
+      this.auth.updateScore({score:this.totalScore }).subscribe((result)=> {
+        console.log('Successfully update data',result)
+       },(err: Error)=> {
+         console.log('Error found in update score',err)
+       })
+    }
     this.auth.logout()
   }
 }
