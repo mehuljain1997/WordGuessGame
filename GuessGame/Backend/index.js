@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
-var cron = require('node-cron');
+const cron = require('node-cron');
 require('dotenv').config()
 const app = express();
 app.use(bodyParser.json());
